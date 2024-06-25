@@ -38,8 +38,24 @@ public class JengaPlacer : EditorWindow
         GUILayout.Label("Jenga Tower Editor", EditorStyles.boldLabel);
 
         mainParent = (Transform)EditorGUILayout.ObjectField("Jenga Tower Root", mainParent, typeof(Transform), true);
+
+        if (mainParent == null)
+        {
+            GUILayout.Label("Add Main Parent", EditorStyles.boldLabel);
+            return;
+        }
         prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
+        if (prefab == null)
+        {
+            GUILayout.Label("Add Prefab", EditorStyles.boldLabel);
+            return;
+        }
         levelData = (LevelData)EditorGUILayout.ObjectField("Level Data", levelData, typeof(LevelData), false);
+        if (levelData == null)
+        {
+            GUILayout.Label("Add Level Data", EditorStyles.boldLabel);
+            return;
+        }
         GUILayout.Label("Properties", EditorStyles.boldLabel);
         yOffset = EditorGUILayout.FloatField("Y Offset", yOffset);
         xOffset = EditorGUILayout.FloatField("Z Offset", xOffset);
@@ -53,10 +69,22 @@ public class JengaPlacer : EditorWindow
             currentPosition = mainParent.position + new Vector3(0, yOffset, 0);
             blocks = new List<Transform>();
             index = 0;
+            isEnabled = false;
 
             for (int i = 0; i < mainParent.childCount; i++)
             {
                 DestroyAllChildren(mainParent);
+            }
+        }
+
+        GUILayout.Label("Modify Block Area", EditorStyles.boldLabel);
+        GameObject selectedObject = Selection.activeGameObject;
+
+        if (selectedObject != null && selectedObject.TryGetComponent<Block>(out Block block))
+        {
+            if (GUILayout.Button("Change Color"))
+            {
+                block.UpdateMat(selectedMat);
             }
         }
     }
@@ -254,10 +282,13 @@ public class JengaPlacer : EditorWindow
 
     private void OnEnable()
     {
-        currentPosition = mainParent.position + new Vector3(0, yOffset, 0);
+        isEnabled = false;
+        if (mainParent)
+            currentPosition = mainParent.position + new Vector3(0, yOffset, 0);
         blocks = new List<Transform>();
         index = 0;
-        selectedMat = levelData.jengaColors[0];
+        if (levelData)
+            selectedMat = levelData.jengaColors[0];
         SceneView.duringSceneGui += OnSceneGUI;
 
     }
