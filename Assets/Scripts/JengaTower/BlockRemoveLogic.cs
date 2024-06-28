@@ -36,7 +36,7 @@ public class BlockRemoveLogic : MonoBehaviour
             oldBlock = block;
             block.Select();
         }
-        else if (selectedColor == Color.black || block.GetColor() == Color.black)
+        else if ((selectedColor == Color.black || block.GetColor() == Color.black) && (block != oldBlock))
         {
             block.Select();
             oldBlock.RemoveFromSelection();

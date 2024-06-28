@@ -103,6 +103,16 @@ public class Block : MonoBehaviour
         if (BlockRemoveLogic.instance)
             BlockRemoveLogic.instance.OnClickedBlock(this);
     }
+    public Vector3 GetRoationValue()
+    {
+        Vector3 rot = transform.rotation.eulerAngles;
+
+        rot.x = RoundValue(rot.x);
+        rot.y = RoundValue(rot.y);
+        rot.z = RoundValue(rot.z);
+
+        return rot;
+    }
     public float RoundValue(float originalValue)
     {
         float roundedValue = Mathf.Round(originalValue * 100f) / 100f;
@@ -113,6 +123,14 @@ public class Block : MonoBehaviour
     {
         Gizmos.color = Color.white;
         Gizmos.DrawRay(transform.position, transform.right * 5);
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.transform.tag == "Ground")
+        {
+            if (Gamemanager.instance)
+                Gamemanager.instance.CheckForGameOver(transform);
+        }
     }
     #endregion
 }
