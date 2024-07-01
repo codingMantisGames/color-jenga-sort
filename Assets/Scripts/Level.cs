@@ -5,13 +5,15 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     #region VARIABLES
-    [SerializeField] private Transform jengaHolder;
+    public Transform jengaHolder;
+    public int coinsIfWin;
+    public int coinsIfLose;
     #endregion
 
     #region UNITY FUNCTIONS
     void Update()
     {
-	
+
     }
     #endregion
 

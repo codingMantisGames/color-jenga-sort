@@ -7,6 +7,8 @@ public class JengaHistoryHolder : MonoBehaviour
     #region VARIABLES
     public List<History> histories;
     public static JengaHistoryHolder instance;
+    public PanelAnimation undoButtonPanel;
+
     #endregion
 
     #region UNITY FUNCTIONS
@@ -16,7 +18,7 @@ public class JengaHistoryHolder : MonoBehaviour
     }
     void Start()
     {
-        SaveHistory();
+        //SaveHistory();
     }
     void Update()
     {
@@ -41,6 +43,11 @@ public class JengaHistoryHolder : MonoBehaviour
         }
 
         histories.Add(history);
+
+        if (histories.Count > 1)
+        {
+            undoButtonPanel.Show(0);
+        }
     }
     public void Undo()
     {
@@ -60,6 +67,14 @@ public class JengaHistoryHolder : MonoBehaviour
             {
                 block.ResetBlock();
             }
+        }
+
+        if (Gamemanager.instance)
+            Gamemanager.instance.Undo();
+
+        if (histories.Count == 1)
+        {
+            undoButtonPanel.Hide(0);
         }
     }
     #endregion

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class Block : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Block : MonoBehaviour
     private Outline outline;
 
     [SerializeField] private bool isMuticolor = false;
+    [SerializeField] private bool isGift = false;
     [SerializeField] private float moveTime;
     [SerializeField] private Ease moveEase;
     [SerializeField] private float moveDistance;
@@ -93,11 +95,22 @@ public class Block : MonoBehaviour
 
             if (BlockRemoveLogic.instance)
                 BlockRemoveLogic.instance.removedBlocks.Add(this);
+
+            if (Gamemanager.instance)
+            {
+                Gamemanager.instance.CheckForGameWin();
+                if (isGift)
+                {
+                    Gamemanager.instance.AddGift();
+                    transform.GetChild(0).gameObject.SetActive(false);
+                }
+            }
+
         });
     }
     private void OnMouseDown()
     {
-        if (isRemoved)
+        if (isRemoved || IsPointerOverUIElement())
             return;
 
         if (BlockRemoveLogic.instance)
@@ -131,6 +144,17 @@ public class Block : MonoBehaviour
             if (Gamemanager.instance)
                 Gamemanager.instance.CheckForGameOver(transform);
         }
+    }
+    public static bool IsPointerOverUIElement()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        return results.Count > 0;
     }
     #endregion
 }

@@ -154,7 +154,7 @@ MonoBehaviour:
   isMuticolor: 0
   moveTime: 1
   moveEase: 7
-  moveDistance: 5
+  moveDistance: 10
 --- !u!114 &1046140581629851957
 MonoBehaviour:
   m_ObjectHideFlags: 0

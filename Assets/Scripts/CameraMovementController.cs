@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.EventSystems;
 
 public class CameraMovementController : MonoBehaviour
 {
@@ -12,16 +13,24 @@ public class CameraMovementController : MonoBehaviour
 
     private Vector2 previousTouchPosition;
     private bool isDragging;
+    public static CameraMovementController instance;
+    public bool isEnabled;
     #endregion
 
     #region UNITY FUNCTIONS
+    private void Awake()
+    {
+        instance = this;
+
+        isEnabled = true;
+    }
     void Start()
     {
 
     }
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (isEnabled && Input.touchCount > 0 && !IsPointerOverUIElement())
         {
             Touch touch = Input.GetTouch(0);
 
@@ -50,6 +59,16 @@ public class CameraMovementController : MonoBehaviour
     #endregion
 
     #region FUNCTIONS
+    public static bool IsPointerOverUIElement()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        return results.Count > 0;
+    }
     #endregion
 }
