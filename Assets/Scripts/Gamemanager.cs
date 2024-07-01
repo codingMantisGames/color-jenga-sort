@@ -45,6 +45,8 @@ public class Gamemanager : MonoBehaviour
     bool isGameOver = false;
     bool isGameWin = false;
     bool haveGift = false;
+    public bool canVibrate;
+    bool isSoundOn;
     #endregion
 
     #region UNITY FUNCTIONS
@@ -80,7 +82,7 @@ public class Gamemanager : MonoBehaviour
         else
             undoButton.interactable = true;
 
-        
+
     }
     void Update()
     {

@@ -63,6 +63,9 @@ public class JengaHistoryHolder : MonoBehaviour
             transform.GetChild(i).rotation = history.blockDatas[i].rot;
             transform.GetChild(i).gameObject.SetActive(history.blockDatas[i].active);
 
+            if (Gamemanager.instance.canVibrate)
+                Taptic.Medium();
+
             if (transform.GetChild(i).gameObject.activeSelf && transform.GetChild(i).TryGetComponent<Block>(out Block block))
             {
                 block.ResetBlock();

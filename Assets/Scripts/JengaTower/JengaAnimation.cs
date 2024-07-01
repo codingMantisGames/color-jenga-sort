@@ -68,6 +68,9 @@ public class JengaAnimation : MonoBehaviour
                 }
                 counter++;
 
+                if (Gamemanager.instance.canVibrate)
+                    Taptic.Medium();
+
                 if(counter == blockPositions.Count)
                 {
                     StartGameNow();
