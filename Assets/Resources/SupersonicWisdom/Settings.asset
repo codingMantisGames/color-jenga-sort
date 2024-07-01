@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec7a0fea8b7741029ab27881275a6955, type: 3}
+  m_Name: Settings
+  m_EditorClassIdentifier: 
+  appName: 
+  iosAppId: 
+  iosChinaAppId: 
+  iosGameId: 
+  iosChinaGameId: 
+  androidGameId: 80ed75b0-486b-455e-b350-9a988789129a
+  ironSourceAndroidAppKey: 
+  ironSourceIosAppKey: 
+  ironSourceIosChinaAppKey: 
+  iosGameAnalyticsGameKey: 
+  iosGameAnalyticsSecretKey: 
+  androidGameAnalyticsGameKey: 2d3f2ecd94200dfe883766b3de61cbaa
+  androidGameAnalyticsSecretKey: 2264a77eb18f2de6a086d780aca110f533aa7529
+  adMobIosAppId: 
+  adMobIosChinaAppId: 
+  adMobAndroidAppId: 
+  areTextMeshProEssentialsInstalled: 1
+  disableFacebookInit: 0
+  testPrivacyPolicy: -1
+  customInterstitialMinimumInterval: 0
+  interstitialMinimumInterval: 20
+  customInterstitialMinimumLevel: 0
+  interstitialMinimumLevel: 1
+  iosChinaBuildEnabled: 0
+  iapNoAdsAndroid: 
+  iapNoAdsIOS: 
+  iosChinaGameAnalyticsGameKey: 
+  iosChinaGameAnalyticsSecretKey: 
+  unityProjectId: 
+  isTimeBased: 0
+  enableManagedInterstitialAds: 0
+  enableManagedBannerAds: 0
+  enableUnityAnalyticsIntegration: 0
+  enableManagedRateUsPopup: 0
+  enableDebug: 0
+  debugIronSource: 0
+  testBlockingApiInvocation: 0
+  enableTestAds: 0
+  enableDevtools: 0
+  logViaNetwork: 0
+  iapProductsAndroid: []
+  iapProductsIos: []
+  enableAndroidIap: 0
+  enableIosIap: 0
+  enableIosAutomaticNotificationPermission: 0
+  validateBeforeBuild: 1
+  accountToken: fe4f8b036dbad56a5516868e4b22ab21e47b409df40b750af70cb3f28704fa48
+  selectedGameIndex: 1
+  isTitleSelectedAutomatically: 0
+  wasLoggedIn: 1

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using SupersonicWisdomSDK;
 
 public class Gamemanager : MonoBehaviour
 {
@@ -100,7 +101,7 @@ public class Gamemanager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                SceneManager.LoadSceneAsync(0);
+                SceneManager.LoadSceneAsync(1);
             }
         }
 
@@ -108,7 +109,7 @@ public class Gamemanager : MonoBehaviour
         {
             if (!haveGift && Input.GetMouseButtonDown(0))
             {
-                SceneManager.LoadSceneAsync(0);
+                SceneManager.LoadSceneAsync(1);
 
             }
             else if (haveGift && Input.GetMouseButtonDown(0))
@@ -164,6 +165,16 @@ public class Gamemanager : MonoBehaviour
         startPanel.Hide();
         inGamePanel.transform.parent.gameObject.SetActive(true);
         inGamePanel.Show();
+
+        try
+        {
+            int lvl = PlayerPrefs.GetInt("Level");
+            SupersonicWisdom.Api.NotifyLevelStarted(ESwLevelType.Regular, lvl, null);
+        }
+        catch
+        {
+            Debug.LogWarning("SDK not initialized!");
+        }
     }
     public void Undo()
     {
@@ -193,7 +204,17 @@ public class Gamemanager : MonoBehaviour
     }
     public void ReloadGameYes()
     {
-        SceneManager.LoadSceneAsync(0);
+        try
+        {
+            int lvl = PlayerPrefs.GetInt("Level");
+            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl, null);
+        }
+        catch
+        {
+            Debug.LogWarning("SDK not initialized!");
+        }
+
+        SceneManager.LoadSceneAsync(1);
     }
     public void ReloadGameNo()
     {
@@ -218,6 +239,16 @@ public class Gamemanager : MonoBehaviour
         coinsEarnedLoseTextLabel.text = "+ <sprite=0> " + level.coinsIfLose;
 
         Coin += level.coinsIfLose;
+
+        try
+        {
+            int lvl = PlayerPrefs.GetInt("Level");
+            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl, null);
+        }
+        catch
+        {
+            Debug.LogWarning("SDK not initialized!");
+        }
     }
     public int GetActiveChildCount(Transform parent)
     {
@@ -247,8 +278,18 @@ public class Gamemanager : MonoBehaviour
         Coin += level.coinsIfWin;
 
         int lvl = PlayerPrefs.GetInt("Level");
+        try
+        {
+            SupersonicWisdom.Api.NotifyLevelCompleted(ESwLevelType.Regular, lvl, null);
+        }
+        catch
+        {
+            Debug.LogWarning("SDK not initialized!");
+        }
+
         PlayerPrefs.SetInt("Level", lvl + 1);
         PlayerPrefs.Save();
+
     }
     public void RemoveGift()
     {
