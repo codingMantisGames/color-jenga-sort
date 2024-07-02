@@ -70,7 +70,7 @@ public class Gamemanager : MonoBehaviour
 
         if (lvl >= levels.Count)
         {
-            lvl = Random.Range(0, levels.Count - 1);
+            lvl = Random.Range(2, levels.Count - 1);
         }
         level = levels[lvl];
 
@@ -307,7 +307,7 @@ public class Gamemanager : MonoBehaviour
         int lvl = PlayerPrefs.GetInt("Level");
         try
         {
-            SupersonicWisdom.Api.NotifyLevelCompleted(ESwLevelType.Regular, lvl, null);
+            SupersonicWisdom.Api.NotifyLevelCompleted(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {

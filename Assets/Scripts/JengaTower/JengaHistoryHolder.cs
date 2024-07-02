@@ -44,7 +44,7 @@ public class JengaHistoryHolder : MonoBehaviour
 
         histories.Add(history);
 
-        if (histories.Count > 1)
+        if (histories.Count > 1 && this.enabled)
         {
             undoButtonPanel.Show(0);
         }

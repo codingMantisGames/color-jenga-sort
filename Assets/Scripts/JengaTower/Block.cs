@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class Block : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class Block : MonoBehaviour
     private bool isRemoved = false;
     [SerializeField] private AudioSource clickedAudio;
     [SerializeField] private AudioSource placedAudio;
+
+    [Header("Events")]
+    public UnityEvent OnClick;
     #endregion
 
     #region UNITY FUNCTIONS
@@ -113,8 +117,13 @@ public class Block : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        if (!this.enabled)
+            return;
+
         if (isRemoved || IsPointerOverUIElement())
             return;
+
+        OnClick.Invoke();
 
         clickedAudio.Play();
 

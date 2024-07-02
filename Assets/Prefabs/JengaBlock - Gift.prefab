@@ -174,12 +174,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockMat: {fileID: 2100000, guid: a8cf98ed1c5911141a41b7c7e829a12c, type: 2}
   isMuticolor: 1
-  isGift: 0
+  isGift: 1
   moveTime: 1
   moveEase: 7
   moveDistance: 10
   clickedAudio: {fileID: 9092314036121551851}
   placedAudio: {fileID: 7598176400103783140}
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &19525153144393228
 MonoBehaviour:
   m_ObjectHideFlags: 0

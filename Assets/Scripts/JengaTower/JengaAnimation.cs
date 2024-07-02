@@ -13,6 +13,7 @@ public class JengaAnimation : MonoBehaviour
     [SerializeField] private float timeDelay = 0.1f;
     [SerializeField] private float height;
     private JengaHistoryHolder historyHolder;
+    [SerializeField] private bool enableBlockAtEnd = true;
     int counter;
     #endregion
 
@@ -86,6 +87,9 @@ public class JengaAnimation : MonoBehaviour
     }
     public void StartGameNow()
     {
+        if (!enableBlockAtEnd)
+            return;
+
         foreach (var item in blockTrans)
         {
             if (item.TryGetComponent<Block>(out Block blk))

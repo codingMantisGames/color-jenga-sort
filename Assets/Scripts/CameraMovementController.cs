@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class CameraMovementController : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class CameraMovementController : MonoBehaviour
     private bool isDragging;
     public static CameraMovementController instance;
     public bool isEnabled;
+    [Header("Events")]
+    public UnityEvent OnClick;
     #endregion
 
     #region UNITY FUNCTIONS
@@ -49,6 +52,8 @@ public class CameraMovementController : MonoBehaviour
                 freeLookCamera.m_YAxis.Value = Mathf.Clamp01(freeLookCamera.m_YAxis.Value);
 
                 previousTouchPosition = touch.position;
+
+                OnClick.Invoke();
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
