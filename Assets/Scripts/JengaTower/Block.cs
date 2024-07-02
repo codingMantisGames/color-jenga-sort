@@ -17,9 +17,12 @@ public class Block : MonoBehaviour
     [SerializeField] private Ease moveEase;
     [SerializeField] private float moveDistance;
     private bool isRemoved = false;
+    [SerializeField] private AudioSource clickedAudio;
+    [SerializeField] private AudioSource placedAudio;
     #endregion
 
     #region UNITY FUNCTIONS
+    
     void Start()
     {
         mesh = gameObject.GetComponent<MeshRenderer>();
@@ -113,6 +116,11 @@ public class Block : MonoBehaviour
         if (isRemoved || IsPointerOverUIElement())
             return;
 
+        clickedAudio.Play();
+
+        if (Gamemanager.instance.canVibrate)
+            Taptic.Light();
+
         if (BlockRemoveLogic.instance)
             BlockRemoveLogic.instance.OnClickedBlock(this);
     }
@@ -155,6 +163,10 @@ public class Block : MonoBehaviour
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 
         return results.Count > 0;
+    }
+    public void PlayAudio()
+    {
+        clickedAudio.Play();
     }
     #endregion
 }

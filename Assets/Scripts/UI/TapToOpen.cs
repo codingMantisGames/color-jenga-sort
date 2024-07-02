@@ -41,6 +41,7 @@ public class TapToOpen : MonoBehaviour
                       glow.SetActive(false);
                       gameObject.SetActive(false);
 
+                      coin.gameObject.SetActive(true);
                       coin.transform.DOScale(1, 0.5f).SetEase(Ease.Flash);
 
                       Invoke("ShowTapToContButton", 2);

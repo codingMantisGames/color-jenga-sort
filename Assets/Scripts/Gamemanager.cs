@@ -32,6 +32,8 @@ public class Gamemanager : MonoBehaviour
     [SerializeField] private TMP_Text coinsEarnedLoseTextLabel;
     [SerializeField] private TMP_Text coinsLabel;
     [SerializeField] private GameObject gift;
+    [SerializeField] private AudioSource buttonAudio;
+    [SerializeField] private GameObject particleFX;
 
     [Header("UI - Others")]
     [SerializeField] private string[] winMessages;
@@ -94,6 +96,10 @@ public class Gamemanager : MonoBehaviour
                 isGameStared = true;
 
                 StartGame();
+
+                buttonAudio.Play();
+                if (canVibrate)
+                    Taptic.Light();
             }
         }
 
@@ -102,6 +108,10 @@ public class Gamemanager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 SceneManager.LoadSceneAsync(1);
+
+                buttonAudio.Play();
+                if (canVibrate)
+                    Taptic.Light();
             }
         }
 
@@ -111,12 +121,20 @@ public class Gamemanager : MonoBehaviour
             {
                 SceneManager.LoadSceneAsync(1);
 
+                buttonAudio.Play();
+                if (canVibrate)
+                    Taptic.Light();
+
             }
             else if (haveGift && Input.GetMouseButtonDown(0))
             {
                 winPanel.SetActive(false);
 
                 giftPanel.SetActive(true);
+
+                buttonAudio.Play();
+                if (canVibrate)
+                    Taptic.Light();
             }
         }
     }
@@ -169,7 +187,7 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelStarted(ESwLevelType.Regular, lvl, null);
+            SupersonicWisdom.Api.NotifyLevelStarted(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -207,13 +225,17 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl, null);
+            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
             Debug.LogWarning("SDK not initialized!");
         }
 
+        Invoke("LoadNextScene", 0.5f);
+    }
+    void LoadNextScene()
+    {
         SceneManager.LoadSceneAsync(1);
     }
     public void ReloadGameNo()
@@ -225,6 +247,9 @@ public class Gamemanager : MonoBehaviour
     }
     public void GameOver()
     {
+        if (isGameOver)
+            return;
+
         losePanel.SetActive(true);
         inGamePanel.transform.parent.gameObject.SetActive(false);
         startPanel.gameObject.SetActive(false);
@@ -243,7 +268,7 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl, null);
+            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -266,6 +291,8 @@ public class Gamemanager : MonoBehaviour
     public void GameWin()
     {
         isGameWin = true;
+
+        particleFX.SetActive(true);
 
         winPanel.SetActive(true);
         inGamePanel.transform.parent.gameObject.SetActive(false);

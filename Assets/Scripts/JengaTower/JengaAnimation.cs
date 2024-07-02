@@ -68,6 +68,11 @@ public class JengaAnimation : MonoBehaviour
                 }
                 counter++;
 
+                if (item.TryGetComponent<Block>(out Block blk))
+                {
+                    blk.PlayAudio();
+                }
+
                 if (Gamemanager.instance.canVibrate)
                     Taptic.Medium();
 
