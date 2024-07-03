@@ -25,6 +25,102 @@ public class JengaPlacer : EditorWindow
     }
     private void OnGUI()
     {
+        if (Application.isPlaying)
+        {
+            GUILayout.Label("GAME MODE!!!", EditorStyles.boldLabel);
+            return;
+        }
+
+        mainParent = (Transform)EditorGUILayout.ObjectField("Jenga Tower Root", mainParent, typeof(Transform), true);
+        GameObject[] selectedObjects2 = Selection.gameObjects;
+        if(selectedObjects2.Length > 0)
+        {
+            if (GUILayout.Button("Shuffle"))
+            {
+                foreach (var item in selectedObjects2)
+                {
+                    Vector3 pos = item.transform.localPosition;
+                    pos.x += Random.Range(-0.1f, 0.1f);
+                    pos.z += Random.Range(-0.1f, 0.1f);
+
+                    item.transform.localPosition = pos;
+                }
+            }
+        }
+        Transform[] selectedObjects = mainParent.GetComponentsInChildren<Transform>();
+        if (selectedObjects.Length > 0)
+        {
+            GUILayout.Label("Data", EditorStyles.boldLabel);
+            int item_1 = 0;
+            int item_2 = 0;
+            int item_3 = 0;
+            int extra = 0;
+
+            foreach (var item in selectedObjects)
+            {
+                string name = item.name;
+
+                if (name.Split('_').Length > 1)
+                {
+                    string temp = name.Split('_')[1];
+                    if (temp == "Item1")
+                        item_1++;
+                    else if (temp == "Item2")
+                        item_2++;
+                    else if (temp == "Item3")
+                        item_3++;
+                    else
+                        extra++;
+                }
+            }
+            GUILayout.Label("Item 1 : " + item_1, EditorStyles.label);
+            GUILayout.Label("Item 2 : " + item_2, EditorStyles.label);
+            GUILayout.Label("Item 3 : " + item_3, EditorStyles.label);
+            GUILayout.Label("Extra : " + extra, EditorStyles.label);
+
+           
+        }
+        GUILayout.Label("Modify Block Area", EditorStyles.boldLabel);
+        if(selectedObjects.Length > 0)
+        {
+            if (GUILayout.Button("Rename"))
+            {
+                for (int i = 0; i < selectedObjects.Length; i++)
+                {
+                    MeshRenderer mesh = selectedObjects[i].GetComponent<MeshRenderer>();
+                    if (mesh != null)
+                    {
+                        string n = "Block_" + mesh.sharedMaterial.name;
+                        selectedObjects[i].name = n;
+                    }
+                }
+            }
+        }
+
+        if (levelData)
+        {
+            DrawColorButtons();
+        }
+        GameObject selectedObject = Selection.activeGameObject;
+
+        if (selectedObject != null && selectedObject.TryGetComponent<Block>(out Block block))
+        {
+            if (GUILayout.Button("Change Color"))
+            {
+                block.UpdateMat(selectedMat);
+
+                MeshRenderer mesh = block.GetComponent<MeshRenderer>();
+                if (mesh != null)
+                {
+                    string n = "Block_" + mesh.sharedMaterial.name;
+                    block.name = n;
+                }
+            }
+        }
+
+
+        GUILayout.Label("Jenga Tower Editor", EditorStyles.boldLabel);
+
         if (GUILayout.Button(isEnabled ? "Disable" : "Enable"))
         {
             isEnabled = !isEnabled;
@@ -35,9 +131,7 @@ public class JengaPlacer : EditorWindow
             GUILayout.Label("Please Enable Editor", EditorStyles.boldLabel);
             return;
         }
-        GUILayout.Label("Jenga Tower Editor", EditorStyles.boldLabel);
 
-        mainParent = (Transform)EditorGUILayout.ObjectField("Jenga Tower Root", mainParent, typeof(Transform), true);
 
         if (mainParent == null)
         {
@@ -60,10 +154,7 @@ public class JengaPlacer : EditorWindow
         yOffset = EditorGUILayout.FloatField("Y Offset", yOffset);
         xOffset = EditorGUILayout.FloatField("Z Offset", xOffset);
 
-        if (levelData)
-        {
-            DrawColorButtons();
-        }
+
         if (GUILayout.Button("Reset"))
         {
             currentPosition = mainParent.position + new Vector3(0, yOffset, 0);
@@ -77,16 +168,9 @@ public class JengaPlacer : EditorWindow
             }
         }
 
-        GUILayout.Label("Modify Block Area", EditorStyles.boldLabel);
-        GameObject selectedObject = Selection.activeGameObject;
 
-        if (selectedObject != null && selectedObject.TryGetComponent<Block>(out Block block))
-        {
-            if (GUILayout.Button("Change Color"))
-            {
-                block.UpdateMat(selectedMat);
-            }
-        }
+
+
     }
     private void OnSceneGUI(SceneView sceneView)
     {
@@ -124,10 +208,8 @@ public class JengaPlacer : EditorWindow
     #region FUNCTIONS
     public void DestroyAllChildren(Transform parent)
     {
-        // Iterate through all child objects of the parent transform
         for (int i = parent.childCount - 1; i >= 0; i--)
         {
-            // Destroy the child GameObject at index i
             DestroyImmediate(parent.GetChild(i).gameObject);
         }
     }
@@ -248,6 +330,13 @@ public class JengaPlacer : EditorWindow
         if (instance.TryGetComponent<Block>(out Block block))
         {
             block.UpdateMat(selectedMat);
+
+            MeshRenderer mesh = block.GetComponent<MeshRenderer>();
+            if (mesh != null)
+            {
+                string n = "Block_" + mesh.sharedMaterial.name;
+                block.name = n;
+            }
         }
         index++;
         MeshRenderer meshRenderer = prefab.GetComponent<MeshRenderer>();

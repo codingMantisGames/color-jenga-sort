@@ -156,12 +156,20 @@ public class Block : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if(isRemoved && collision.transform.tag == "Block")
+        {
+            if (collision.transform.gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            {
+                rb.AddForce(1f * Vector3.down);
+            }
+        }
         if (collision.gameObject.transform.tag == "Ground")
         {
             if (Gamemanager.instance)
                 Gamemanager.instance.CheckForGameOver(transform);
         }
     }
+
     public static bool IsPointerOverUIElement()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);

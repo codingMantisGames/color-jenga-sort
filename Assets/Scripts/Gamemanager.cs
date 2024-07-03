@@ -11,6 +11,7 @@ public class Gamemanager : MonoBehaviour
 {
     #region VARIABLES
     public static Gamemanager instance;
+    public int testLevel = -1;
     [SerializeField] private List<Level> levels;
     [HideInInspector] public Level level;
     public float rotationThreshold = 1.0f;
@@ -72,6 +73,9 @@ public class Gamemanager : MonoBehaviour
         {
             lvl = Random.Range(2, levels.Count - 1);
         }
+        if (testLevel != -1)
+            lvl = testLevel;
+
         level = levels[lvl];
 
         level.gameObject.SetActive(true);
@@ -285,7 +289,6 @@ public class Gamemanager : MonoBehaviour
                 activeChildCount++;
             }
         }
-        Debug.LogWarning(activeChildCount);
         return activeChildCount;
     }
     public void GameWin()
