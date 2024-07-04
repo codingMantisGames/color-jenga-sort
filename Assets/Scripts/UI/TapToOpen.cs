@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 
 public class TapToOpen : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class TapToOpen : MonoBehaviour
     [SerializeField] private float scale;
     [SerializeField] private float easeTime;
     [SerializeField] private Ease ease;
+    [SerializeField] private TMP_Text giftAmount;
+    private int amount = 0;
     #endregion
 
     #region UNITY FUNCTIONS
@@ -38,6 +41,9 @@ public class TapToOpen : MonoBehaviour
 
                   if (tapCount == 0)
                   {
+                      amount = Random.Range(10, 150);
+                      giftAmount.text = "+ <sprite=0> " + amount;
+
                       glow.SetActive(false);
                       gameObject.SetActive(false);
 
@@ -54,7 +60,7 @@ public class TapToOpen : MonoBehaviour
         tapToContinueButton.SetActive(true);
 
         if (Gamemanager.instance)
-            Gamemanager.instance.RemoveGift();
+            Gamemanager.instance.RemoveGift(amount);
     }
     #endregion
 }

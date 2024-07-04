@@ -51,11 +51,17 @@ public class Gamemanager : MonoBehaviour
     bool haveGift = false;
     public bool canVibrate;
     bool isSoundOn;
+    bool isReload;
+#if UNITY_EDITOR
+    float timer = 0;
+#endif
     #endregion
 
     #region UNITY FUNCTIONS
     private void Awake()
     {
+        Time.timeScale = 1;
+
         instance = this;
 
         Application.targetFrameRate = 60;
@@ -71,7 +77,13 @@ public class Gamemanager : MonoBehaviour
 
         if (lvl >= levels.Count)
         {
-            lvl = Random.Range(2, levels.Count - 1);
+            if (PrevLevel == 0)
+            {
+                lvl = Random.Range(2, levels.Count - 1);
+                PrevLevel = lvl;
+            }
+            else
+                lvl = PrevLevel;
         }
         if (testLevel != -1)
             lvl = testLevel;
@@ -88,7 +100,7 @@ public class Gamemanager : MonoBehaviour
             undoButton.interactable = false;
         else
             undoButton.interactable = true;
-
+        isReload = false;
 
     }
     void Update()
@@ -105,6 +117,12 @@ public class Gamemanager : MonoBehaviour
                 if (canVibrate)
                     Taptic.Light();
             }
+        }
+        else
+        {
+#if UNITY_EDITOR
+            timer += Time.deltaTime;
+#endif
         }
 
         if (isGameOver)
@@ -148,6 +166,12 @@ public class Gamemanager : MonoBehaviour
     public void CheckForGameOver(Transform block)
     {
         Debug.LogWarning("Check for gameover!");
+
+        StartCoroutine(GameoverCheck(block));
+    }
+    IEnumerator GameoverCheck(Transform block)
+    {
+        yield return new WaitForSeconds(0.5f);
 
         float rotationX = block.eulerAngles.x;
         float rotationZ = block.eulerAngles.z;
@@ -219,13 +243,20 @@ public class Gamemanager : MonoBehaviour
     }
     public void ShowReloadPanel()
     {
+        isReload = true;
+
         inGamePanel.transform.parent.gameObject.SetActive(false);
         startPanel.gameObject.SetActive(false);
 
         restartPanel.SetActive(true);
+
+        Time.timeScale = 0;
     }
     public void ReloadGameYes()
     {
+        isReload = true;
+        Time.timeScale = 1;
+
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
@@ -244,6 +275,10 @@ public class Gamemanager : MonoBehaviour
     }
     public void ReloadGameNo()
     {
+        isReload = false;
+
+        Time.timeScale = 1;
+
         inGamePanel.transform.parent.gameObject.SetActive(true);
         startPanel.gameObject.SetActive(true);
 
@@ -251,8 +286,11 @@ public class Gamemanager : MonoBehaviour
     }
     public void GameOver()
     {
-        if (isGameOver)
+        if (isGameOver || isGameWin || isReload)
             return;
+#if UNITY_EDITOR
+        ConvertSecondsToMinutesAndSeconds();
+#endif
 
         losePanel.SetActive(true);
         inGamePanel.transform.parent.gameObject.SetActive(false);
@@ -293,6 +331,13 @@ public class Gamemanager : MonoBehaviour
     }
     public void GameWin()
     {
+        if (isGameOver || isGameWin || isReload)
+            return;
+        PrevLevel = 0;
+#if UNITY_EDITOR
+        ConvertSecondsToMinutesAndSeconds();
+#endif
+
         isGameWin = true;
 
         particleFX.SetActive(true);
@@ -321,11 +366,11 @@ public class Gamemanager : MonoBehaviour
         PlayerPrefs.Save();
 
     }
-    public void RemoveGift()
+    public void RemoveGift(int amt)
     {
         haveGift = false;
 
-        Coin += 150;
+        Coin += amt;
     }
     public void AddGift()
     {
@@ -345,5 +390,26 @@ public class Gamemanager : MonoBehaviour
             return PlayerPrefs.GetInt("Coin");
         }
     }
+    public int PrevLevel
+    {
+        set
+        {
+            PlayerPrefs.SetInt("PrevLevel", value);
+            PlayerPrefs.Save();
+        }
+        get
+        {
+            return PlayerPrefs.GetInt("PrevLevel");
+        }
+    }
+
+#if UNITY_EDITOR
+    void ConvertSecondsToMinutesAndSeconds()
+    {
+        float minutes = timer / 60;
+        float seconds = timer % 60;
+        Debug.LogError("Game Completed in " + string.Format("{0:00}:{1:00}", minutes, seconds));
+    }
+#endif
     #endregion
 }

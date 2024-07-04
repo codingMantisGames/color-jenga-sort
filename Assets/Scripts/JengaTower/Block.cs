@@ -20,13 +20,14 @@ public class Block : MonoBehaviour
     private bool isRemoved = false;
     [SerializeField] private AudioSource clickedAudio;
     [SerializeField] private AudioSource placedAudio;
-
+    public enum MovementDirection { LEFT, RIGHT, FORWARD, BACKWARD };
+    [SerializeField] private MovementDirection movementDirection= MovementDirection.RIGHT;
     [Header("Events")]
     public UnityEvent OnClick;
     #endregion
 
     #region UNITY FUNCTIONS
-    
+
     void Start()
     {
         mesh = gameObject.GetComponent<MeshRenderer>();
@@ -82,7 +83,7 @@ public class Block : MonoBehaviour
 
         Vector3 currentPosition = transform.position;
 
-        Vector3 pos = currentPosition + transform.right * moveDistance;
+        Vector3 pos = currentPosition + GetDirection() * moveDistance;
 
         if (TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
@@ -152,11 +153,11 @@ public class Block : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawRay(transform.position, transform.right * 5);
+        Gizmos.DrawRay(transform.position, GetDirection() * 5);
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(isRemoved && collision.transform.tag == "Block")
+        if (isRemoved && collision.transform.tag == "Block")
         {
             if (collision.transform.gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
@@ -184,6 +185,27 @@ public class Block : MonoBehaviour
     public void PlayAudio()
     {
         clickedAudio.Play();
+    }
+    Vector3 GetDirection()
+    {
+        Vector3 dir = transform.forward;
+        switch (movementDirection)
+        {
+            case MovementDirection.LEFT:
+                dir = transform.right * -1;
+                break;
+            case MovementDirection.RIGHT:
+                dir = transform.right;
+                break;
+            case MovementDirection.FORWARD:
+                dir = transform.forward;
+                break;
+            case MovementDirection.BACKWARD:
+                dir = transform.forward * -1;
+                break;
+        }
+
+        return dir;
     }
     #endregion
 }

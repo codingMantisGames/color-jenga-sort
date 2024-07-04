@@ -14,6 +14,7 @@ public class JengaAnimation : MonoBehaviour
     [SerializeField] private float height;
     private JengaHistoryHolder historyHolder;
     [SerializeField] private bool enableBlockAtEnd = true;
+    [SerializeField] private bool enableRigidbodyAtEndOnly = false;
     int counter;
     #endregion
 
@@ -62,7 +63,7 @@ public class JengaAnimation : MonoBehaviour
             item.gameObject.SetActive(true);
             item.DOMove(blockPositions[i++], movementTime).SetEase(movementEase).OnComplete(() =>
             {
-                if (item.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                if (!enableRigidbodyAtEndOnly && item.TryGetComponent<Rigidbody>(out Rigidbody rb))
                 {
                     rb.isKinematic = false;
                     rb.useGravity = true;
@@ -77,7 +78,7 @@ public class JengaAnimation : MonoBehaviour
                 if (Gamemanager.instance.canVibrate)
                     Taptic.Medium();
 
-                if(counter == blockPositions.Count)
+                if (counter == blockPositions.Count)
                 {
                     StartGameNow();
                 }
@@ -92,6 +93,12 @@ public class JengaAnimation : MonoBehaviour
 
         foreach (var item in blockTrans)
         {
+            if (enableRigidbodyAtEndOnly && item.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+
             if (item.TryGetComponent<Block>(out Block blk))
             {
                 blk.enabled = true;

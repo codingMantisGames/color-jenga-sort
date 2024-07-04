@@ -6,6 +6,7 @@ public class JengaPlacer : EditorWindow
 {
     #region VARIABLES
     private Transform mainParent;
+    private Transform refObject;
     private GameObject prefab;
     private LevelData levelData;
     Vector3 currentPosition;
@@ -30,11 +31,47 @@ public class JengaPlacer : EditorWindow
             GUILayout.Label("GAME MODE!!!", EditorStyles.boldLabel);
             return;
         }
-
-        mainParent = (Transform)EditorGUILayout.ObjectField("Jenga Tower Root", mainParent, typeof(Transform), true);
         GameObject[] selectedObjects2 = Selection.gameObjects;
-        if(selectedObjects2.Length > 0)
+        GUILayout.Label("Custom Editor", EditorStyles.boldLabel);
+        refObject = (Transform)EditorGUILayout.ObjectField("Ref Object", refObject, typeof(Transform), true);
+        if (selectedObjects2.Length > 0 && refObject != null)
         {
+            if (GUILayout.Button("Arrange"))
+            {
+                foreach (var item in selectedObjects2)
+                {
+                    Vector3 pos = item.transform.localPosition;
+                    pos.y = refObject.localPosition.y + 0.610859f;
+
+                    item.transform.localPosition = pos;
+                }
+            }
+            
+        }
+
+        GUILayout.Label("Modify Block Area", EditorStyles.boldLabel);
+        mainParent = (Transform)EditorGUILayout.ObjectField("Jenga Tower Root", mainParent, typeof(Transform), true);
+        if (selectedObjects2.Length > 0)
+        {
+            if (GUILayout.Button("Order Them"))
+            {
+                for (int i = 0; i < selectedObjects2.Length; i++)
+                {
+                    for (int j = i + 1; j < selectedObjects2.Length; j++) // Compare each object with the rest
+                    {
+                        if (selectedObjects2[i].transform.localPosition.y >= selectedObjects2[j].transform.localPosition.y)
+                        {
+                            var temp = selectedObjects2[i];
+                            selectedObjects2[i] = selectedObjects2[j];
+                            selectedObjects2[j] = temp;
+                        }
+                    }
+                }
+                for (int i = 0; i < selectedObjects2.Length; i++)
+                {
+                    selectedObjects2[i].transform.SetSiblingIndex(i);
+                }
+            }
             if (GUILayout.Button("Shuffle"))
             {
                 foreach (var item in selectedObjects2)
@@ -44,6 +81,18 @@ public class JengaPlacer : EditorWindow
                     pos.z += Random.Range(-0.1f, 0.1f);
 
                     item.transform.localPosition = pos;
+                }
+            }
+            
+            if (GUILayout.Button("Place Below"))
+            {
+                foreach (var item in selectedObjects2)
+                {
+                    Vector3 pos = item.transform.localPosition;
+                    if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit))
+                    {
+                        item.transform.position = hit.point;
+                    }
                 }
             }
         }
@@ -78,10 +127,10 @@ public class JengaPlacer : EditorWindow
             GUILayout.Label("Item 3 : " + item_3, EditorStyles.label);
             GUILayout.Label("Extra : " + extra, EditorStyles.label);
 
-           
+
         }
-        GUILayout.Label("Modify Block Area", EditorStyles.boldLabel);
-        if(selectedObjects.Length > 0)
+
+        if (selectedObjects.Length > 0)
         {
             if (GUILayout.Button("Rename"))
             {
@@ -96,6 +145,8 @@ public class JengaPlacer : EditorWindow
                 }
             }
         }
+        
+
 
         if (levelData)
         {
@@ -245,6 +296,8 @@ public class JengaPlacer : EditorWindow
                 //ApplyColorToPrefab();
             }
         }
+
+
         EditorGUILayout.EndHorizontal();
     }
     private Texture2D MakeTexWithBorder(int width, int height, Color fillColor, Color borderColor, int borderWidth)
@@ -337,6 +390,10 @@ public class JengaPlacer : EditorWindow
                 string n = "Block_" + mesh.sharedMaterial.name;
                 block.name = n;
             }
+        }
+        if (selectedMat.color == Color.white)
+        {
+            DestroyImmediate(instance.gameObject);
         }
         index++;
         MeshRenderer meshRenderer = prefab.GetComponent<MeshRenderer>();
