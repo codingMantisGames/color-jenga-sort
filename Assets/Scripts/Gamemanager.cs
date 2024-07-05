@@ -24,6 +24,7 @@ public class Gamemanager : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject restartPanel;
     [SerializeField] private GameObject giftPanel;
+    [SerializeField] private GameObject handPanel;
 
     [Header("UI - References")]
     [SerializeField] private TMP_Text lvlLabel;
@@ -286,6 +287,7 @@ public class Gamemanager : MonoBehaviour
     }
     public void GameOver()
     {
+        handPanel.SetActive(false);
         if (isGameOver || isGameWin || isReload)
             return;
 #if UNITY_EDITOR
@@ -331,6 +333,7 @@ public class Gamemanager : MonoBehaviour
     }
     public void GameWin()
     {
+        handPanel.SetActive(false);
         if (isGameOver || isGameWin || isReload)
             return;
         PrevLevel = 0;

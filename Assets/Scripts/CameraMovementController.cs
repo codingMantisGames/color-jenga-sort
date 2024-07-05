@@ -33,7 +33,7 @@ public class CameraMovementController : MonoBehaviour
     }
     void Update()
     {
-        if (isEnabled && Input.touchCount > 0 && !IsPointerOverUIElement())
+        /*if (isEnabled && Input.touchCount > 0 && !IsPointerOverUIElement())
         {
             Touch touch = Input.GetTouch(0);
 
@@ -59,7 +59,35 @@ public class CameraMovementController : MonoBehaviour
             {
                 isDragging = false;
             }
+        }*/
+        if (isEnabled && Input.GetMouseButton(0) && !IsPointerOverUIElement())
+        {
+            Vector2 currentMousePosition = Input.mousePosition;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                previousTouchPosition = currentMousePosition;
+                isDragging = true;
+            }
+            else if (Input.GetMouseButton(0) && isDragging)
+            {
+                Vector2 mouseDelta = (Vector2)currentMousePosition - previousTouchPosition;
+
+                freeLookCamera.m_XAxis.Value += mouseDelta.x * touchSensitivityX * Time.deltaTime;
+                freeLookCamera.m_YAxis.Value += mouseDelta.y * touchSensitivityY * Time.deltaTime * -1;
+
+                freeLookCamera.m_YAxis.Value = Mathf.Clamp01(freeLookCamera.m_YAxis.Value);
+
+                previousTouchPosition = currentMousePosition;
+
+                OnClick.Invoke();
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+            }
         }
+
     }
     #endregion
 
