@@ -171,6 +171,7 @@ MonoBehaviour:
   moveDistance: 10
   clickedAudio: {fileID: 7661733829135140670}
   placedAudio: {fileID: 3767206046162852569}
+  movementDirection: 1
   OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -187,8 +188,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2.5
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineWidth: 3.5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
