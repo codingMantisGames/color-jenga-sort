@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using SupersonicWisdomSDK;
 
 public class Gamemanager : MonoBehaviour
 {
@@ -215,7 +214,7 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelStarted(ESwLevelType.Regular, lvl + 1, null);
+            //SupersonicWisdom.Api.NotifyLevelStarted(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -260,7 +259,7 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
+            //SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -310,7 +309,7 @@ public class Gamemanager : MonoBehaviour
         try
         {
             int lvl = PlayerPrefs.GetInt("Level");
-            SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
+            //SupersonicWisdom.Api.NotifyLevelFailed(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -355,7 +354,7 @@ public class Gamemanager : MonoBehaviour
         int lvl = PlayerPrefs.GetInt("Level");
         try
         {
-            SupersonicWisdom.Api.NotifyLevelCompleted(ESwLevelType.Regular, lvl + 1, null);
+           // SupersonicWisdom.Api.NotifyLevelCompleted(ESwLevelType.Regular, lvl + 1, null);
         }
         catch
         {
@@ -408,7 +407,7 @@ public class Gamemanager : MonoBehaviour
     {
         float minutes = timer / 60;
         float seconds = timer % 60;
-        Debug.LogError("Game Completed in " + string.Format("{0:00}:{1:00}", minutes, seconds));
+        Debug.Log("Game Completed in " + string.Format("{0:00}:{1:00}", minutes, seconds));
     }
 #endif
     #endregion

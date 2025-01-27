@@ -21,8 +21,8 @@ public class SimpleVibration : MonoBehaviour
     #region FUNCTIONS
     public void PlayVibration()
     {
-        if (Gamemanager.instance.canVibrate)
-            Taptic.Light();
+       /* if (Gamemanager.instance.canVibrate)
+            Taptic.Light();*/
     }
     #endregion
 }
